@@ -1,4 +1,6 @@
-CREATE TABLE todousers (
+CREATE EXTENSION IF NOT EXISTS pg_cron;
+
+CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100),
     email VARCHAR(100),
@@ -22,3 +24,10 @@ BEGIN
     INSERT INTO execution_log DEFAULT VALUES;
 END;
 $$;
+
+-- Schedule every 2 minutes
+SELECT cron.schedule(
+    'run-every-2-min',
+    '*/2 * * * *',
+    $$CALL log_execution();$$
+);
