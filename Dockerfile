@@ -1,19 +1,14 @@
-# Use official Node.js LTS image
-FROM node:20
+# Use the official Nginx image
+FROM nginx:alpine
 
-# Set working directory
-WORKDIR /app
+# Remove default Nginx content
+RUN rm -rf /usr/share/nginx/html/*
 
-# Copy backend package.json and install dependencies
-COPY package.json package-lock.json* ./ 
-RUN npm install
+# Copy your static files into Nginx's default directory
+COPY index.html /usr/share/nginx/html/
 
-# Copy backend and frontend files
-COPY backend ./backend
-COPY frontend ./frontend
+# Expose port 80
+EXPOSE 80
 
-# Expose the port
-EXPOSE 3000
-
-# Start the server
-CMD ["node", "backend/server.js"]
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]
